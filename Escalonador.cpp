@@ -24,7 +24,8 @@ void Escalonador::init_Task_Timers()
 
 
 template <typename TASKTYPE, typename OBJECTTYPE>
-int Escalonador::addTask(int (TASKTYPE::*task)(void), OBJECTTYPE* newObject, int time, int priority)
+int Escalonador::addTask(void (TASKTYPE::*task)(void), OBJECTTYPE* newObject, int time, int priority)
+//void Escalonador::addTask(void (*task)(void), int time, int priority)
 {
     unsigned int t_time;
     /* Verifica se a prioridade é válida */

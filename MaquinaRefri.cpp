@@ -27,7 +27,7 @@ MaquinaRefri::MaquinaRefri()
 void MaquinaRefri::inicia()
 {
 
-	struct tm *timeinfo; // timeinfo é o ponteiro
+	//struct tm *timeinfo; // timeinfo é o ponteiro
 
 	// padrão para configurar hora (year, month, day, hora, min, sec, true is Pm)
 	cadVenda.setDataHora(2019, 12, 31, 11, 59, 40, true); // Configuração inicial da DataHora
@@ -55,8 +55,18 @@ void MaquinaRefri::inicia()
 	//
 	projectEsc.Run_RTC_Scheduler(); // Executa a tarefa
 	*/
-
-
+	
+	Escalonador projectEsc;
+	MaquinaRefri objMaquina;
+	MaquinaRefri *ptrMaquina;
+	ptrMaquina = &objMaquina;
+	void (MaquinaRefri::*pShowMenu)() = &MaquinaRefri::showMenu; // Deitel pg 972
+	void (MaquinaRefri::*pLogicaEstados)() = &MaquinaRefri::logicaEstados; // Deitel pg 972
+	projectEsc.init_Task_Timers();
+	projectEsc.addTask(pShowMenu,ptrMaquina,10,0);
+	projectEsc.addTask(pLogicaEstados,ptrMaquina,10,1);
+	projectEsc.Run_RTC_Scheduler(); // Executa a tarefa
+	
 	do
 	{
 		showMenu();

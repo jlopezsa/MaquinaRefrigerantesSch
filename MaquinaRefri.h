@@ -1,23 +1,22 @@
 #ifndef MAQUINAREFRI
 #define MAQUINAREFRI
 
+#define INTERFACE 1 // 1 = PC  || 2 = ATLYS
+
 #include "InterfaceIn.h"
 #include "InterfaceOut.h"
 #include "CadastroVenda.h"
 #include "ConsultaLog.h"
-#include "Escalonador.h"
 
-#define INTERFACE 1 // 1 = PC  || 2 = ATLYS
+
 
 class MaquinaRefri
 {
 	InterfaceIn *pEntrada; // pEntrada aponta para diversas formas (polimorfismo)
 	InterfaceOut *pSaida;
 	CadastroVenda cadVenda;
-	Escalonador projectEsc;
 	int estAtual;
 	int passwordOperator;
-
 public:
 	MaquinaRefri();
 	void inicia();
