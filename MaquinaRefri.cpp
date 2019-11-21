@@ -15,8 +15,8 @@ using namespace std;
 
 MaquinaRefri::MaquinaRefri()
 {
-	setEstAtual(0); // Configura estado inicial da Maquina de Estados
 	passwordOperator = 33;
+
 #if INTERFACE == 1 // Using PC (diretivas de compilação para processdor)
 	time(&timer);
 #else // Using Atlys
@@ -66,11 +66,11 @@ void MaquinaRefri::inicia()
 	void (MaquinaRefri::*pInputOption)() = &MaquinaRefri::inputOption; // Deitel pg 972
 	projectEscVoid.init_Task_Timers();
 	projectEscVoid.addTask(pShowMenu,ptrMaquina,10,0);
-	projectEscVoid.addTask(pLogicaEstados,ptrMaquina,10,1);
-	projectEscVoid.addTask(pInputOption,ptrMaquina,10,1);
+	projectEscVoid.addTask(pLogicaEstados,ptrMaquina,20,1);
+	projectEscVoid.addTask(pInputOption,ptrMaquina,30,2);
 	projectEscVoid.Run_RTC_Scheduler(); // Executa a tarefa
 	
-
+	setEstAtual(0); // Configura estado inicial da Maquina de Estados
 	do
 	{
 		showMenu();
@@ -96,7 +96,6 @@ void MaquinaRefri::logicaEstados()
 	//---- Variaveis
 	bool saida = false;
 	int segundos = 0; // usado para contar os segundos transcurridos
-	int option;
 #if INTERFACE == 1 || INTERFACE == 3 // Using PC (diretivas de compilação para processdor)
 	pSaida = new TelaPc();
 #else // Using Atlys

@@ -6,29 +6,36 @@ using namespace std;
 
 #include "InterfaceIn.h"
 //#include "MaquinaRefri.h"
+#include "FilaFifo.h"
 #include "Timer.h"
 
-#define MAX_TASKS 2 // nr. máximo de tarefas
+#define MAX_TASKS 3 // nr. máximo de tarefas
 
 // Define estrutura com as informações da Task Control Block (TCB)
-template<typename TYPEFUNC, typename TASKTYPE, typename OBJECTTYPE>
+template <typename TYPEFUNC, typename TASKTYPE, typename OBJECTTYPE>
 struct task_t
 {
-    string state;                     // ready, running, waiting. Opcional
-    OBJECTTYPE *ptrObject;          // ponteiro do objeto onde encontra-se o metodo que vai ser escalonado
-    TYPEFUNC (TASKTYPE::*task)(void); // ponteiro para uma função
-    int ready;                        // se 1: pronto para executar, se 0: não pronto para executar
+    string state;          // ready, running, waiting. Opcional
+    OBJECTTYPE *ptrObject; // ponteiro do objeto onde encontra-se o metodo que vai ser escalonado
+    TYPEFUNC (TASKTYPE::*task)(void);    // ponteiro para uma função
+    int ready; // se 1: pronto para executar, se 0: não pronto para executar
     int delay;
     int period;
     int enabled; // se 1: tarefa ativa, se 0: não ativa
 };
 
+typedef struct{
+    int a;
+    float b;
+}testeStruct;
 // Define a classe
-template<typename TYPEFUNC, typename TASKTYPE, typename OBJECTTYPE>
+template <typename TYPEFUNC, typename TASKTYPE, typename OBJECTTYPE>
 class Escalonador
 {
 private:
-    task_t<TYPEFUNC,TASKTYPE,OBJECTTYPE> GBL_task_table[MAX_TASKS]; // tabela global de tarefas
+    task_t<TYPEFUNC, TASKTYPE, OBJECTTYPE> GBL_task_table[MAX_TASKS]; // tabela global de tarefas
+    FilaFifo<testeStruct> filaProntos;
+
 public:
     Escalonador();
     ~Escalonador();

@@ -101,79 +101,86 @@ bool Lista<NODETYPE>::isEmpty()
    return head == 0; // TRUE: if vazia, else FALSE
 }
 
-/*
-void Lista::insertionSort(int value) {
-  Node* p = head;
-  Node* q = head;
+template <typename NODETYPE>
+void Lista<NODETYPE>::insertionSort(NODETYPE value)
+{
+   Node<NODETYPE> *p = head; // head: ponteiro
+   Node<NODETYPE> *q = head;
 
-  if (head == 0)
-  {
-     head = new Node(value,head);
-	 int i;
-	 i = head->getVal();
-  }
-  else
-  {
-	  int pint;
-	  int auxint;
-	  pint = q->getVal();
-	  auxint = pint;
-	  while ((q != 0) && (auxint < value))
-	  {
-		  p = q;
-		  q = p->getNext();
-		  if (q != 0)
-		  {
-			pint = q->getVal();
-			auxint = pint;
-		  }
-	  }
-	  if (p == q)
-		  head = new Node(value,head);
-	  else
-			p->setNext(new Node(value,q));
-  }
+   if (head == 0) // Insere primeiro nodo
+   {
+      head = new Node<NODETYPE>(value, head);
+      Node<NODETYPE> i;
+      i = head->getData();
+   }
+   else
+   {
+      Node<NODETYPE> pint;
+      Node<NODETYPE> auxint;
+      pint = q->getData();
+      auxint = pint;
+      while ((q != 0) && (auxint < value))
+      {
+         p = q;
+         q = p->getNext();
+         if (q != 0)
+         {
+            pint = q->getVal();
+            auxint = pint;
+         }
+      }
+      if (p == q)
+         head = new Node<NODETYPE>(value, head);
+      else
+         p->setNext(new Node<NODETYPE>(value, q));
+   }
 }
 
+template <typename NODETYPE>
+int Lista<NODETYPE>::removeNode(NODETYPE dat)
+{
+   Node<NODETYPE> *p = head;
+   Node<NODETYPE> *q = head;
+   Node<NODETYPE> result;
 
-int Lista::removeNode(int dat) {
-  Node* p = head;
-  Node* q = head;
-  int result;
+   if (head == 0)
+      result = 0;
+   else
+   {
+      while ((q != 0) && (q->getVal() != dat))
+      { // Error!! the addresses will always be different!
+         p = q;
+         q = p->getNext();
+      }
+      if (q != 0)
+      {
+         if (q == head)
+         { // it is the first node
+            result = q->getVal();
+            head = q->getNext();
+            delete q;
+         }
+         else
+         { // the node is in the middle
+            result = q->getVal();
+            p->setNext(q->getNext());
+            delete q;
+         }
+      }
+      else
+         result = 0; // node not found!
+   }
 
-  if (head == 0)
-     result = 0;
-  else {
-	  while ((q != 0) && (q->getVal() != dat)){  // Error!! the addresses will always be different!
-		  p = q;
-		  q = p->getNext();
-	  }
-	  if (q != 0) {
-		  if (q == head){	// it is the first node
-			  result = q->getVal();
-			  head = q->getNext();
-			  delete q;
-		  }
-		  else{				// the node is in the middle
-			  result = q->getVal();
-			  p->setNext(q->getNext());
-			  delete q;
-		  }
-	  }
-	  else
-		  result = 0;		// node not found!
-  }
-
-  return result;
+   return result;
 }
-*/
-template <typename NODETYPE>           // Ainda não utilizada
+
+template <typename NODETYPE> // Ainda não utilizada
 void Lista<NODETYPE>::listAll()
 {
    Node<NODETYPE> *aux = head;
    while (aux != 0)
    {
-      cout << aux->getData() << endl;           // >>> Problema quando desejo imprimir uma estrutura
+      cout << aux->getData() << endl; // >>> Problema quando desejo imprimir uma estrutura
       aux = aux->getProx();
    }
 }
@@ -205,7 +212,4 @@ NODETYPE Lista<NODETYPE>::getProxNode(Node<NODETYPE> * currentNode) //Pasando ar
 };
 */
 
-
 //----------------------
-
-

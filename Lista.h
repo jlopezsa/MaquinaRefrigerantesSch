@@ -21,8 +21,8 @@ public:
   NODETYPE readFirst();
   NODETYPE removeFirst();
   bool isEmpty();
-  //void insertionSort(int value);
-  //int removeNode(int dat);
+  void insertionSort(NODETYPE newData);
+  int removeNode(NODETYPE newData);
   void listAll();
   //NODETYPE getProxNode(Node<NODETYPE> * currentNode); 
 };

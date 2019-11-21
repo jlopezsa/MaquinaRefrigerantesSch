@@ -115,8 +115,8 @@ void Escalonador<TYPEFUNC,TASKTYPE,OBJECTTYPE>::tick_timer_intr(void)
     int i;
     cout << "\t\tDelay task 0: " << setfill(' ') << setw(2) << GBL_task_table[0].delay;
     cout << "\tDelay task 1: " << setfill(' ') << setw(2) << GBL_task_table[1].delay;
-    //cout << "\tDelay task 2: " << GBL_task_table[2].delay ;
-    cout << endl;
+    cout << "\tDelay task 2: " << GBL_task_table[2].delay << endl;
+    //cout << endl;
     for (i = 0; i < MAX_TASKS; i++)
     {
         //cout << "FLAG TEST: into tick_timer_intr for " << i << endl;
