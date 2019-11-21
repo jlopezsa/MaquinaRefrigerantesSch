@@ -24,6 +24,7 @@ MaquinaRefri::MaquinaRefri()
 #endif
 };
 
+
 void MaquinaRefri::inicia()
 {
 
@@ -56,17 +57,20 @@ void MaquinaRefri::inicia()
 	projectEsc.Run_RTC_Scheduler(); // Executa a tarefa
 	*/
 	
-	Escalonador projectEsc;
+	Escalonador<void,MaquinaRefri,MaquinaRefri> projectEscVoid;
 	MaquinaRefri objMaquina;
 	MaquinaRefri *ptrMaquina;
 	ptrMaquina = &objMaquina;
 	void (MaquinaRefri::*pShowMenu)() = &MaquinaRefri::showMenu; // Deitel pg 972
 	void (MaquinaRefri::*pLogicaEstados)() = &MaquinaRefri::logicaEstados; // Deitel pg 972
-	projectEsc.init_Task_Timers();
-	projectEsc.addTask(pShowMenu,ptrMaquina,10,0);
-	projectEsc.addTask(pLogicaEstados,ptrMaquina,10,1);
-	projectEsc.Run_RTC_Scheduler(); // Executa a tarefa
+	void (MaquinaRefri::*pInputOption)() = &MaquinaRefri::inputOption; // Deitel pg 972
+	projectEscVoid.init_Task_Timers();
+	projectEscVoid.addTask(pShowMenu,ptrMaquina,10,0);
+	projectEscVoid.addTask(pLogicaEstados,ptrMaquina,10,1);
+	projectEscVoid.addTask(pInputOption,ptrMaquina,10,1);
+	projectEscVoid.Run_RTC_Scheduler(); // Executa a tarefa
 	
+
 	do
 	{
 		showMenu();
@@ -74,7 +78,7 @@ void MaquinaRefri::inicia()
 	} while (1);
 }
 
-int MaquinaRefri::inputOption()
+void MaquinaRefri::inputOption()
 {
 #if INTERFACE == 1 || INTERFACE == 3 // Using PC (diretivas de compilação para processdor)
 	pEntrada = new TecladoPc();
@@ -82,7 +86,7 @@ int MaquinaRefri::inputOption()
 	pEntrada = new TecladoAtlys();
 #endif
 	//
-	return pEntrada->getInput();
+	option = pEntrada->getInput();
 }
 //
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
@@ -103,7 +107,7 @@ void MaquinaRefri::logicaEstados()
 	{
 	case 0: // ------------------------------------------ Estado S000
 		pSaida->impMensa("\tSaldo 0");
-		option = inputOption();
+		inputOption();
 		if (option == 1)
 			setEstAtual(1);
 		else if (option == 2)
@@ -120,7 +124,7 @@ void MaquinaRefri::logicaEstados()
 		break;
 	case 1: // ------------------------------------------ Estado S025
 		pSaida->impMensa("\tSaldo 25");
-		option = inputOption();
+		inputOption();
 		if (option == 1)
 			setEstAtual(2);
 		else if (option == 2)
@@ -143,7 +147,7 @@ void MaquinaRefri::logicaEstados()
 		break;
 	case 2: // ------------------------------------------ Estado S050
 		pSaida->impMensa("\tSaldo 50");
-		option = inputOption();
+		inputOption();
 		if (option == 1)
 			setEstAtual(3);
 		else if (option == 2)
@@ -165,7 +169,7 @@ void MaquinaRefri::logicaEstados()
 		break;
 	case 3: // ------------------------------------------ Estado S075
 		pSaida->impMensa("\tSaldo 75");
-		option = inputOption();
+		inputOption();
 		if (option == 1)
 			setEstAtual(4);
 		else if (option == 2)
@@ -190,7 +194,7 @@ void MaquinaRefri::logicaEstados()
 		break;
 	case 4: // ------------------------------------------ Estado S100
 		pSaida->impMensa("\tSaldo 100");
-		option = inputOption();
+		inputOption();
 		if (option == 1)
 			setEstAtual(5);
 		else if (option == 2)
@@ -215,7 +219,7 @@ void MaquinaRefri::logicaEstados()
 		break;
 	case 5: // ------------------------------------------ Estado S125
 		pSaida->impMensa("\tSaldo 125");
-		option = inputOption();
+		inputOption();
 		if (option == 1)
 			setEstAtual(6);
 		else if (option == 2)
@@ -243,7 +247,7 @@ void MaquinaRefri::logicaEstados()
 		break;
 	case 6: // ------------------------------------------ Estado S150
 		pSaida->impMensa("\tSaldo 150");
-		option = inputOption();
+		inputOption();
 		if (option == 1)
 		{
 			setEstAtual(6);

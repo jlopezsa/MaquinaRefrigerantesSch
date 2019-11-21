@@ -17,6 +17,7 @@ class MaquinaRefri
 	CadastroVenda cadVenda;
 	int estAtual;
 	int passwordOperator;
+	int option;
 public:
 	MaquinaRefri();
 	void inicia();
@@ -24,7 +25,7 @@ public:
 	void modoOperador(int);
 	bool verificaPassword(int);
 	void logicaEstados();
-	int inputOption();
+	void inputOption();
 	void showMenu();
 #if INTERFACE == 1 || INTERFACE == 3			// Using PC (diretivas de compilação para processdor)
 	time_t timer, timerFim; // contabiliza segundos no PC
