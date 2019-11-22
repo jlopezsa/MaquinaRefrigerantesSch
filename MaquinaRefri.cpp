@@ -11,8 +11,6 @@ using namespace std;
 #include "TecladoAtlys.cpp"
 #include "CadastroVenda.cpp"
 
-#include "Escalonador.cpp"
-
 MaquinaRefri::MaquinaRefri()
 {
 	passwordOperator = 33;
@@ -41,6 +39,8 @@ void MaquinaRefri::inicia()
 	std::cout << "*                                                           " << std::endl;
 	std::cout << "************************************************************" << std::endl;
 
+	setEstAtual(0); // Configura estado inicial da Maquina de Estados	
+
 	/*
 	TecladoPc *pT;
 	TecladoPc objTecladoPc;
@@ -56,27 +56,6 @@ void MaquinaRefri::inicia()
 	//
 	projectEsc.Run_RTC_Scheduler(); // Executa a tarefa
 	*/
-	
-	//Escalonador<void,MaquinaRefri,MaquinaRefri> projectEscVoid;
-	Escalonador projectEscVoid;
-	MaquinaRefri objMaquina;
-	MaquinaRefri *ptrMaquina;
-	ptrMaquina = &objMaquina;
-	void (MaquinaRefri::*pShowMenu)() = &MaquinaRefri::showMenu; // Deitel pg 972
-	void (MaquinaRefri::*pLogicaEstados)() = &MaquinaRefri::logicaEstados; // Deitel pg 972
-	void (MaquinaRefri::*pInputOption)() = &MaquinaRefri::inputOption; // Deitel pg 972
-	projectEscVoid.init_Task_Timers();
-	projectEscVoid.addTask(pShowMenu,ptrMaquina,10,0);
-	projectEscVoid.addTask(pLogicaEstados,ptrMaquina,20,1);
-	projectEscVoid.addTask(pInputOption,ptrMaquina,30,2);
-	//projectEscVoid.Run_RTC_Scheduler(); // Executa a tarefa
-	
-	setEstAtual(0); // Configura estado inicial da Maquina de Estados
-	do
-	{
-		showMenu();
-		logicaEstados();
-	} while (1);
 }
 
 void MaquinaRefri::inputOption()
@@ -107,7 +86,7 @@ void MaquinaRefri::logicaEstados()
 	{
 	case 0: // ------------------------------------------ Estado S000
 		pSaida->impMensa("\tSaldo 0");
-		inputOption();
+		inputOption(); //@@@@@@@@@ ISR
 		if (option == 1)
 			setEstAtual(1);
 		else if (option == 2)
@@ -116,15 +95,14 @@ void MaquinaRefri::logicaEstados()
 			setEstAtual(4);
 		else if (6 < option && option < 11) // else if (pEntrada->getInputOperator() == 7,8,9,10)
 		{									// Operator Mode
-			cout << option;
-			modoOperador(option);
+			modoOperador(); //@@@@@@@@@ ISR
 		}
 		else
 			setEstAtual(0);
 		break;
 	case 1: // ------------------------------------------ Estado S025
 		pSaida->impMensa("\tSaldo 25");
-		inputOption();
+		inputOption(); //@@@@@@@@@ ISR
 		if (option == 1)
 			setEstAtual(2);
 		else if (option == 2)
@@ -138,7 +116,7 @@ void MaquinaRefri::logicaEstados()
 		}
 		else if (6 < option && option < 11)
 		{ // Operator Mode
-			modoOperador(option);
+			modoOperador(); //@@@@@@@@@ ISR
 			saida = false;
 		}
 		else
@@ -147,7 +125,7 @@ void MaquinaRefri::logicaEstados()
 		break;
 	case 2: // ------------------------------------------ Estado S050
 		pSaida->impMensa("\tSaldo 50");
-		inputOption();
+		inputOption(); //@@@@@@@@@ ISR
 		if (option == 1)
 			setEstAtual(3);
 		else if (option == 2)
@@ -161,7 +139,7 @@ void MaquinaRefri::logicaEstados()
 		}
 		else if (6 < option && option < 11)
 		{ // Operator Mode
-			modoOperador(option);
+			modoOperador(); //@@@@@@@@@ ISR
 			saida = false;
 		}
 		else
@@ -169,7 +147,7 @@ void MaquinaRefri::logicaEstados()
 		break;
 	case 3: // ------------------------------------------ Estado S075
 		pSaida->impMensa("\tSaldo 75");
-		inputOption();
+		inputOption(); //@@@@@@@@@ ISR
 		if (option == 1)
 			setEstAtual(4);
 		else if (option == 2)
@@ -186,7 +164,7 @@ void MaquinaRefri::logicaEstados()
 		}
 		else if (6 < option && option < 11)
 		{ // Operator Mode
-			modoOperador(option);
+			modoOperador(); //@@@@@@@@@ ISR
 			saida = false;
 		}
 		else
@@ -194,7 +172,7 @@ void MaquinaRefri::logicaEstados()
 		break;
 	case 4: // ------------------------------------------ Estado S100
 		pSaida->impMensa("\tSaldo 100");
-		inputOption();
+		inputOption(); //@@@@@@@@@ ISR
 		if (option == 1)
 			setEstAtual(5);
 		else if (option == 2)
@@ -211,7 +189,7 @@ void MaquinaRefri::logicaEstados()
 		}
 		else if (6 < option && option < 11)
 		{ // Operator Mode
-			modoOperador(option);
+			modoOperador(); //@@@@@@@@@ ISR
 			saida = false;
 		}
 		else
@@ -219,7 +197,7 @@ void MaquinaRefri::logicaEstados()
 		break;
 	case 5: // ------------------------------------------ Estado S125
 		pSaida->impMensa("\tSaldo 125");
-		inputOption();
+		inputOption(); //@@@@@@@@@ ISR
 		if (option == 1)
 			setEstAtual(6);
 		else if (option == 2)
@@ -239,7 +217,7 @@ void MaquinaRefri::logicaEstados()
 		}
 		else if (6 < option && option < 11)
 		{ // Operator Mode
-			modoOperador(option);
+			modoOperador(); //@@@@@@@@@ ISR
 			saida = false;
 		}
 		else
@@ -247,7 +225,7 @@ void MaquinaRefri::logicaEstados()
 		break;
 	case 6: // ------------------------------------------ Estado S150
 		pSaida->impMensa("\tSaldo 150");
-		inputOption();
+		inputOption(); //@@@@@@@@@ ISR
 		if (option == 1)
 		{
 			setEstAtual(6);
@@ -304,7 +282,7 @@ void MaquinaRefri::logicaEstados()
 		}
 		else if (6 < option && option < 11)
 		{ // Operator Mode
-			modoOperador(option);
+			modoOperador(); //@@@@@@@@@ ISR
 			saida = false;
 		}
 		else
@@ -324,27 +302,24 @@ void MaquinaRefri::setEstAtual(int estado)
 	estAtual = estado;
 };
 
-void MaquinaRefri::modoOperador(int newOption)
+void MaquinaRefri::modoOperador()
 {
-	int login, optionLog;
-	bool saidaOperador = false;
+	int login;
 	bool logSolicitado = false;
 	bool validez;
 
 	// Verifica password do Operador. Si válido o requisitado é apresentado.
 	pSaida->impMensa("\t\tIngresse password para consultar: ");
-	inputPassword(); // iserir password
+	inputPassword(); // inserir password //@@@@@@@@@ ISR
 	validez = verificaPassword();		// true: valido, false: invalido
 
 	if (validez)
 	{
-		pSaida->impMensa("\tOperador de Log valido");
-
-		optionLog = newOption; // pEntrada->getInputOperator();
+		pSaida->impMensa("\t\t<<<Operador de Log valido>>>\n");
 
 		cadVenda.fifoToList();
 
-		switch (optionLog)
+		switch (option)
 		{
 		case 7: // Listar total valor de vendas
 			cout << "Total vendas: " << cadVenda.getNumeroVendas() << endl;
@@ -359,10 +334,8 @@ void MaquinaRefri::modoOperador(int newOption)
 		case 10: // Listar historico de vendas			
 			cadVenda.listarHistorico();
 			break;
-		case 5: // saida modo operador
-			saidaOperador = true;
-			break;
 		default:
+				cout << "\n\tIndefined FLAG\n";
 			break;
 		}
 	}

@@ -11,7 +11,7 @@ template<typename NODETYPE>
 class Lista{ 
 
   Node<NODETYPE> * head;
-  Node<NODETYPE> * listNode;
+  Node<NODETYPE> * last;
 
 public:
   Lista();
@@ -21,7 +21,7 @@ public:
   NODETYPE readFirst();
   NODETYPE removeFirst();
   bool isEmpty();
-  void insertionSort(NODETYPE newData);
+  void insertionSort(NODETYPE newData); // insere valor de forma ordenada
   int removeNode(NODETYPE newData);
   void listAll();
   //NODETYPE getProxNode(Node<NODETYPE> * currentNode); 

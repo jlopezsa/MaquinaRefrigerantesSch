@@ -33,6 +33,7 @@ template <typename NODETYPE>
 Lista<NODETYPE>::Lista()
 {
    head = 0;
+   last = 0;
 }
 
 template <typename NODETYPE>

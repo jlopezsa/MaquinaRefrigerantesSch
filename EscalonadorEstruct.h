@@ -6,8 +6,10 @@ using namespace std;
 
 #include "InterfaceIn.h"
 #include "MaquinaRefri.h"
-//#include "FilaFifo.h"
+#include "FilaFifo.h"
 #include "Timer.h"
+
+#define MAX_TASKS 3 // nr. máximo de tarefas
 
 // Define estrutura com as informações da Task Control Block (TCB)
 typedef struct
@@ -24,24 +26,28 @@ typedef struct
 //
 //
 // Define a classe
-class Escalonador
+class EscalonadorEstruct
 {
 private:
     task_t GBL_task_table[MAX_TASKS]; // tabela global de tarefas
-    //FilaFifo<task_t> filaProntos;
-
+    task_t taskToSchedule;
+    FilaFifo<task_t> fifoReady;
+    int stateScheduler;
 public:
-    Escalonador();
-    ~Escalonador();
+    EscalonadorEstruct();
+    ~EscalonadorEstruct();
     void init_Task_Timers(void); // inicializa todas as tarefas em 0
     //template <typename TASKTYPE, typename OBJECTTYPE>
     int addTask(void (MaquinaRefri::*task)(void), MaquinaRefri *newObject, int time, int priority);
+    int addTaskFifoReady(void (MaquinaRefri::*task)(void), MaquinaRefri *newObject, int time);
     //void removeTask(void (*task)(void));
     void Enable_Task(int task_number);
     void Disable_Task(int task_number);
     void Run_RTC_Scheduler();
+    //void Run_RTC_SchedulerEstruct();
     void tick_timer_intr(void);
     void Request_Task_Run(int task_number);
+    void schedulerStatesLogic();
     Timer objTimer;
 };
 

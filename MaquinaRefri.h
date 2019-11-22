@@ -4,9 +4,6 @@
 #include "InterfaceIn.h"
 #include "InterfaceOut.h"
 #include "CadastroVenda.h"
-#include "ConsultaLog.h"
-
-
 
 class MaquinaRefri
 {
@@ -21,7 +18,7 @@ public:
 	MaquinaRefri();
 	void inicia();
 	void setEstAtual(int);
-	void modoOperador(int);
+	void modoOperador();
 	bool verificaPassword();
 	void logicaEstados();
 	void inputOption();
