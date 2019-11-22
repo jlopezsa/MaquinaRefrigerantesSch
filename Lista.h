@@ -11,7 +11,7 @@ template<typename NODETYPE>
 class Lista{ 
 
   Node<NODETYPE> * head;
-  //Node<NODETYPE> * listNextNode;
+  Node<NODETYPE> * listNode;
 
 public:
   Lista();

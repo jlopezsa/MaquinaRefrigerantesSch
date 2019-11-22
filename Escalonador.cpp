@@ -1,15 +1,15 @@
 #include "Escalonador.h"
 #include "Timer.cpp"
 
-template<typename TYPEFUNC,typename TASKTYPE,typename OBJECTTYPE>
-Escalonador<TYPEFUNC,TASKTYPE,OBJECTTYPE>::Escalonador(){};
+//template<typename TYPEFUNC,typename TASKTYPE,typename OBJECTTYPE>
+Escalonador::Escalonador(){};
 
-template<typename TYPEFUNC,typename TASKTYPE,typename OBJECTTYPE>
-Escalonador<TYPEFUNC,TASKTYPE,OBJECTTYPE>::~Escalonador(){};
+//template<typename TYPEFUNC,typename TASKTYPE,typename OBJECTTYPE>
+Escalonador::~Escalonador(){};
 
 // Inicializa as entradas de todas as tarefas com 0
-template<typename TYPEFUNC,typename TASKTYPE,typename OBJECTTYPE>
-void Escalonador<TYPEFUNC,TASKTYPE,OBJECTTYPE>::init_Task_Timers()
+//template<typename TYPEFUNC,typename TASKTYPE,typename OBJECTTYPE>
+void Escalonador::init_Task_Timers()
 {
     int i;
     for (i = 0; i < MAX_TASKS; i++)
@@ -26,8 +26,8 @@ void Escalonador<TYPEFUNC,TASKTYPE,OBJECTTYPE>::init_Task_Timers()
 
 
 
-template<typename TYPEFUNC,typename TASKTYPE,typename OBJECTTYPE>
-int Escalonador<TYPEFUNC,TASKTYPE,OBJECTTYPE>::addTask(TYPEFUNC (TASKTYPE::*task)(void), OBJECTTYPE* newObject, int time, int priority)
+//template<typename TYPEFUNC,typename TASKTYPE,typename OBJECTTYPE>
+int Escalonador::addTask(void (MaquinaRefri::*task)(void), MaquinaRefri* newObject, int time, int priority)
 //void Escalonador::addTask(void (*task)(void), int time, int priority)
 {
     unsigned int t_time;
@@ -65,20 +65,20 @@ void Escalonador::removeTask(void (*task)(void))
 };
 */
 
-template<typename TYPEFUNC,typename TASKTYPE,typename OBJECTTYPE>
-void Escalonador<TYPEFUNC,TASKTYPE,OBJECTTYPE>::Enable_Task(int task_number)
+//template<typename TYPEFUNC,typename TASKTYPE,typename OBJECTTYPE>
+void Escalonador::Enable_Task(int task_number)
 {
     GBL_task_table[task_number].enabled = 1;
 }
 
-template<typename TYPEFUNC,typename TASKTYPE,typename OBJECTTYPE>
-void Escalonador<TYPEFUNC,TASKTYPE,OBJECTTYPE>::Disable_Task(int task_number)
+//template<typename TYPEFUNC,typename TASKTYPE,typename OBJECTTYPE>
+void Escalonador::Disable_Task(int task_number)
 {
     GBL_task_table[task_number].enabled = 0;
 }
 
-template<typename TYPEFUNC,typename TASKTYPE,typename OBJECTTYPE>
-void Escalonador<TYPEFUNC,TASKTYPE,OBJECTTYPE>::Run_RTC_Scheduler()
+//template<typename TYPEFUNC,typename TASKTYPE,typename OBJECTTYPE>
+void Escalonador::Run_RTC_Scheduler()
 { // Sempre executando
     int i;
     //GBL_run_scheduler = 1;
@@ -107,8 +107,8 @@ void Escalonador<TYPEFUNC,TASKTYPE,OBJECTTYPE>::Run_RTC_Scheduler()
 /*declara uma função que será uma rotina de serviço
 de interrupção (ISR - Interrupt Service Routine) de prioridade alta*/
 #pragma INTERRUPT tick_timer_intr
-template<typename TYPEFUNC,typename TASKTYPE,typename OBJECTTYPE>
-void Escalonador<TYPEFUNC,TASKTYPE,OBJECTTYPE>::tick_timer_intr(void)
+//template<typename TYPEFUNC,typename TASKTYPE,typename OBJECTTYPE>
+void Escalonador::tick_timer_intr(void)
 {
     //cout << "FLAG TEST: into tick_timer_intr  0000000" << endl;
     //static char i;
@@ -136,8 +136,8 @@ void Escalonador<TYPEFUNC,TASKTYPE,OBJECTTYPE>::tick_timer_intr(void)
     } // for
 }
 
-template<typename TYPEFUNC,typename TASKTYPE,typename OBJECTTYPE>
-void Escalonador<TYPEFUNC,TASKTYPE,OBJECTTYPE>::Request_Task_Run(int task_number)
+//template<typename TYPEFUNC,typename TASKTYPE,typename OBJECTTYPE>
+void Escalonador::Request_Task_Run(int task_number)
 {
     GBL_task_table[task_number].ready = 1;
 }

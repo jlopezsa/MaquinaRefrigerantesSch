@@ -3,6 +3,10 @@
 #include<iostream>
 using namespace std;
 
+#define INTERFACE 1 // 1 = PC  || 2 = ATLYS
+
+
+
 #include "MaquinaRefri.cpp"
 
 int main(){

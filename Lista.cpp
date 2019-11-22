@@ -178,9 +178,14 @@ template <typename NODETYPE> // Ainda não utilizada
 void Lista<NODETYPE>::listAll()
 {
    Node<NODETYPE> *aux = head;
+   //Node<NODETYPE> outStructure;
    while (aux != 0)
    {
-      cout << aux->getData() << endl; // >>> Problema quando desejo imprimir uma estrutura
+      //cout << aux->getData() << endl; // >>> Problema quando desejo imprimir uma estrutura
+      cout << "CodRef: "<< aux->getData().codigoRefri <<"\tRefri: " << aux->getData().nomeRefri <<"\tValor: "<<aux->getData().valorRefri<< 
+		"\tHora (h:m:s): "<<aux->getData().h <<":"<<aux->getData().mi<<":"<<aux->getData().s <<"-"<<(aux->getData().ampm ? " pm" : " am") <<
+      "\tData (a/m/d): "<<aux->getData().a <<"/"<<aux->getData().me<<"/"<<aux->getData().d << endl;
+
       aux = aux->getProx();
    }
 }
@@ -211,5 +216,3 @@ NODETYPE Lista<NODETYPE>::getProxNode(Node<NODETYPE> * currentNode) //Pasando ar
    //}
 };
 */
-
-//----------------------

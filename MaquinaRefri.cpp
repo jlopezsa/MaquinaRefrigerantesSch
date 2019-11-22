@@ -34,11 +34,11 @@ void MaquinaRefri::inicia()
 	cadVenda.setDataHora(2019, 12, 31, 11, 59, 40, true); // Configuração inicial da DataHora
 
 	std::cout << "************************************************************" << std::endl;
-	std::cout << "*           Maquina de venda de refrigerantes              *" << std::endl;
+	std::cout << "*           Maquina de venda de refrigerantes               " << std::endl;
 	std::cout << "* Data/hora inicial: ";
 	cadVenda.visualizaDataHora();
-	std::cout << " 		   *" << endl;
-	std::cout << "*                                                          *" << std::endl;
+	std::cout << " 		    " << endl;
+	std::cout << "*                                                           " << std::endl;
 	std::cout << "************************************************************" << std::endl;
 
 	/*
@@ -57,7 +57,8 @@ void MaquinaRefri::inicia()
 	projectEsc.Run_RTC_Scheduler(); // Executa a tarefa
 	*/
 	
-	Escalonador<void,MaquinaRefri,MaquinaRefri> projectEscVoid;
+	//Escalonador<void,MaquinaRefri,MaquinaRefri> projectEscVoid;
+	Escalonador projectEscVoid;
 	MaquinaRefri objMaquina;
 	MaquinaRefri *ptrMaquina;
 	ptrMaquina = &objMaquina;
@@ -68,7 +69,7 @@ void MaquinaRefri::inicia()
 	projectEscVoid.addTask(pShowMenu,ptrMaquina,10,0);
 	projectEscVoid.addTask(pLogicaEstados,ptrMaquina,20,1);
 	projectEscVoid.addTask(pInputOption,ptrMaquina,30,2);
-	projectEscVoid.Run_RTC_Scheduler(); // Executa a tarefa
+	//projectEscVoid.Run_RTC_Scheduler(); // Executa a tarefa
 	
 	setEstAtual(0); // Configura estado inicial da Maquina de Estados
 	do
@@ -325,15 +326,15 @@ void MaquinaRefri::setEstAtual(int estado)
 
 void MaquinaRefri::modoOperador(int newOption)
 {
-	int login, password, optionLog;
+	int login, optionLog;
 	bool saidaOperador = false;
 	bool logSolicitado = false;
 	bool validez;
 
 	// Verifica password do Operador. Si válido o requisitado é apresentado.
 	pSaida->impMensa("\t\tIngresse password para consultar: ");
-	password = pEntrada->getOperatorPassword(); // iserir password
-	validez = verificaPassword(password);		// true: valido, false: invalido
+	inputPassword(); // iserir password
+	validez = verificaPassword();		// true: valido, false: invalido
 
 	if (validez)
 	{
@@ -353,10 +354,10 @@ void MaquinaRefri::modoOperador(int newOption)
 			cout << "Total de ETIRPS: " << cadVenda.getNumeroETIRPS() << endl;
 			break;
 		case 9: // Listar periodo de dia com mais vendas
-			cout << "Nao implementado." << endl;
+			cadVenda.getNumeroVendasDia();
 			break;
-		case 10: // Listar historico de vendas
-			cout << "Nao implementado." << endl;
+		case 10: // Listar historico de vendas			
+			cadVenda.listarHistorico();
 			break;
 		case 5: // saida modo operador
 			saidaOperador = true;
@@ -371,10 +372,21 @@ void MaquinaRefri::modoOperador(int newOption)
 	}
 }
 
-// Verifica se o password usado pelo Operador corresponde com o cadastrado
-bool MaquinaRefri::verificaPassword(int newPassword)
+void MaquinaRefri::inputPassword()
 {
-	if (newPassword == passwordOperator)
+#if INTERFACE == 1 || INTERFACE == 3 // Using PC (diretivas de compilação para processdor)
+	pEntrada = new TecladoPc();
+#else // Using Atlys
+	pEntrada = new TecladoAtlys();
+#endif
+	//
+	passwordInserido = pEntrada->getOperatorPassword();
+}
+
+// Verifica se o password usado pelo Operador corresponde com o cadastrado
+bool MaquinaRefri::verificaPassword()
+{
+	if (passwordInserido == passwordOperator)
 		return true;
 	else
 		return false;

@@ -21,13 +21,22 @@ typedef struct{
     int codigoRefri; // 1: MEET, 2: ETIRPS
 }dadosVenda;
 
+typedef struct{
+    int madrugada;
+    int manha;
+    int tarde;
+    int noite;
+}periodoDia;
+
 class CadastroVenda {
         FilaFifo<dadosVenda> filaVendas;
         Lista<dadosVenda> listaVendas;
         dadosVenda novaVenda;
+        periodoDia vendasNoDia;
         int numeroVendas;
         int numeroMEET;
-        int numeroETIRPS;     
+        int numeroETIRPS;
+        int diaMaiVendas[2]; // [0]:dia com mais vendas | [1]: numero de vendas nesse dia     
     protected:
         ClockCalendar* dataHora; // *dataHora ponteiro do tipo ClockCalendar        
     public:
@@ -39,9 +48,11 @@ class CadastroVenda {
         void visualizaDataHora();        
         void atualizaDataHora(int segundos);
         void fifoToList();
+        void periodoMaiVendas(dadosVenda newNodo);
         int getNumeroVendas();
 		int getNumeroMEET();
         int getNumeroETIRPS();
+        void getNumeroVendasDia();
         void listarHistorico();
         //friend ostream &operator<< (ostream& c, CadastroVenda * teste); // sobrecarga de operador
 };
