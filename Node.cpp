@@ -5,28 +5,33 @@
 #include "Node.h"
 
 // Constructor
-template<typename NODETYPE> Node<NODETYPE>::Node(NODETYPE newData, Node<NODETYPE>* nxt){
+template<typename NODETYPE> 
+Node<NODETYPE>::Node(NODETYPE newData, Node<NODETYPE>* nxt){
        data = newData;
        nextNode = nxt;
 }
 
 // setData: Armazena os valores do tipo NODETYPE no nodo
-template<typename NODETYPE>void Node<NODETYPE>::setData(NODETYPE newData){
+template<typename NODETYPE>void 
+Node<NODETYPE>::setData(NODETYPE newData){
      data = newData;
 }
 
 // getData
-template<typename NODETYPE> NODETYPE Node<NODETYPE>::getData() const{
+template<typename NODETYPE> 
+NODETYPE Node<NODETYPE>::getData() const{
      return data;
 }
 
 // setProx
-template<typename NODETYPE>void Node<NODETYPE>::setProx(Node<NODETYPE> *nxt){
+template<typename NODETYPE>
+void Node<NODETYPE>::setProx(Node<NODETYPE> *nxt){
      nextNode = nxt;
 }
 
 // getProx
-template<typename NODETYPE>Node<NODETYPE> * Node<NODETYPE>::getProx(){
+template<typename NODETYPE>
+Node<NODETYPE> * Node<NODETYPE>::getProx(){
      return nextNode;
 }
 

@@ -11,18 +11,17 @@ using namespace std;
 #include "TecladoAtlys.cpp"
 #include "CadastroVenda.cpp"
 
-#include "Escalonador.cpp"
-
 MaquinaRefri::MaquinaRefri()
 {
-	setEstAtual(0); // Configura estado inicial da Maquina de Estados
 	passwordOperator = 33;
+
 #if INTERFACE == 1 // Using PC (diretivas de compilação para processdor)
 	time(&timer);
 #else // Using Atlys
 	inicio = clock();
 #endif
 };
+
 
 void MaquinaRefri::inicia()
 {
@@ -33,12 +32,14 @@ void MaquinaRefri::inicia()
 	cadVenda.setDataHora(2019, 12, 31, 11, 59, 40, true); // Configuração inicial da DataHora
 
 	std::cout << "************************************************************" << std::endl;
-	std::cout << "*           Maquina de venda de refrigerantes              *" << std::endl;
+	std::cout << "*           Maquina de venda de refrigerantes               " << std::endl;
 	std::cout << "* Data/hora inicial: ";
 	cadVenda.visualizaDataHora();
-	std::cout << " 		   *" << endl;
-	std::cout << "*                                                          *" << std::endl;
+	std::cout << " 		    " << endl;
+	std::cout << "*                                                           " << std::endl;
 	std::cout << "************************************************************" << std::endl;
+
+	setEstAtual(0); // Configura estado inicial da Maquina de Estados	
 
 	/*
 	TecladoPc *pT;
@@ -55,26 +56,9 @@ void MaquinaRefri::inicia()
 	//
 	projectEsc.Run_RTC_Scheduler(); // Executa a tarefa
 	*/
-	
-	Escalonador projectEsc;
-	MaquinaRefri objMaquina;
-	MaquinaRefri *ptrMaquina;
-	ptrMaquina = &objMaquina;
-	void (MaquinaRefri::*pShowMenu)() = &MaquinaRefri::showMenu; // Deitel pg 972
-	void (MaquinaRefri::*pLogicaEstados)() = &MaquinaRefri::logicaEstados; // Deitel pg 972
-	projectEsc.init_Task_Timers();
-	projectEsc.addTask(pShowMenu,ptrMaquina,10,0);
-	projectEsc.addTask(pLogicaEstados,ptrMaquina,10,1);
-	projectEsc.Run_RTC_Scheduler(); // Executa a tarefa
-	
-	do
-	{
-		showMenu();
-		logicaEstados();
-	} while (1);
 }
 
-int MaquinaRefri::inputOption()
+void MaquinaRefri::inputOption()
 {
 #if INTERFACE == 1 || INTERFACE == 3 // Using PC (diretivas de compilação para processdor)
 	pEntrada = new TecladoPc();
@@ -82,7 +66,7 @@ int MaquinaRefri::inputOption()
 	pEntrada = new TecladoAtlys();
 #endif
 	//
-	return pEntrada->getInput();
+	option = pEntrada->getInput();
 }
 //
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
@@ -92,7 +76,6 @@ void MaquinaRefri::logicaEstados()
 	//---- Variaveis
 	bool saida = false;
 	int segundos = 0; // usado para contar os segundos transcurridos
-	int option;
 #if INTERFACE == 1 || INTERFACE == 3 // Using PC (diretivas de compilação para processdor)
 	pSaida = new TelaPc();
 #else // Using Atlys
@@ -103,7 +86,7 @@ void MaquinaRefri::logicaEstados()
 	{
 	case 0: // ------------------------------------------ Estado S000
 		pSaida->impMensa("\tSaldo 0");
-		option = inputOption();
+		inputOption(); //@@@@@@@@@ ISR
 		if (option == 1)
 			setEstAtual(1);
 		else if (option == 2)
@@ -112,15 +95,14 @@ void MaquinaRefri::logicaEstados()
 			setEstAtual(4);
 		else if (6 < option && option < 11) // else if (pEntrada->getInputOperator() == 7,8,9,10)
 		{									// Operator Mode
-			cout << option;
-			modoOperador(option);
+			modoOperador(); //@@@@@@@@@ ISR
 		}
 		else
 			setEstAtual(0);
 		break;
 	case 1: // ------------------------------------------ Estado S025
 		pSaida->impMensa("\tSaldo 25");
-		option = inputOption();
+		inputOption(); //@@@@@@@@@ ISR
 		if (option == 1)
 			setEstAtual(2);
 		else if (option == 2)
@@ -134,7 +116,7 @@ void MaquinaRefri::logicaEstados()
 		}
 		else if (6 < option && option < 11)
 		{ // Operator Mode
-			modoOperador(option);
+			modoOperador(); //@@@@@@@@@ ISR
 			saida = false;
 		}
 		else
@@ -143,7 +125,7 @@ void MaquinaRefri::logicaEstados()
 		break;
 	case 2: // ------------------------------------------ Estado S050
 		pSaida->impMensa("\tSaldo 50");
-		option = inputOption();
+		inputOption(); //@@@@@@@@@ ISR
 		if (option == 1)
 			setEstAtual(3);
 		else if (option == 2)
@@ -157,7 +139,7 @@ void MaquinaRefri::logicaEstados()
 		}
 		else if (6 < option && option < 11)
 		{ // Operator Mode
-			modoOperador(option);
+			modoOperador(); //@@@@@@@@@ ISR
 			saida = false;
 		}
 		else
@@ -165,7 +147,7 @@ void MaquinaRefri::logicaEstados()
 		break;
 	case 3: // ------------------------------------------ Estado S075
 		pSaida->impMensa("\tSaldo 75");
-		option = inputOption();
+		inputOption(); //@@@@@@@@@ ISR
 		if (option == 1)
 			setEstAtual(4);
 		else if (option == 2)
@@ -182,7 +164,7 @@ void MaquinaRefri::logicaEstados()
 		}
 		else if (6 < option && option < 11)
 		{ // Operator Mode
-			modoOperador(option);
+			modoOperador(); //@@@@@@@@@ ISR
 			saida = false;
 		}
 		else
@@ -190,7 +172,7 @@ void MaquinaRefri::logicaEstados()
 		break;
 	case 4: // ------------------------------------------ Estado S100
 		pSaida->impMensa("\tSaldo 100");
-		option = inputOption();
+		inputOption(); //@@@@@@@@@ ISR
 		if (option == 1)
 			setEstAtual(5);
 		else if (option == 2)
@@ -207,7 +189,7 @@ void MaquinaRefri::logicaEstados()
 		}
 		else if (6 < option && option < 11)
 		{ // Operator Mode
-			modoOperador(option);
+			modoOperador(); //@@@@@@@@@ ISR
 			saida = false;
 		}
 		else
@@ -215,7 +197,7 @@ void MaquinaRefri::logicaEstados()
 		break;
 	case 5: // ------------------------------------------ Estado S125
 		pSaida->impMensa("\tSaldo 125");
-		option = inputOption();
+		inputOption(); //@@@@@@@@@ ISR
 		if (option == 1)
 			setEstAtual(6);
 		else if (option == 2)
@@ -235,7 +217,7 @@ void MaquinaRefri::logicaEstados()
 		}
 		else if (6 < option && option < 11)
 		{ // Operator Mode
-			modoOperador(option);
+			modoOperador(); //@@@@@@@@@ ISR
 			saida = false;
 		}
 		else
@@ -243,7 +225,7 @@ void MaquinaRefri::logicaEstados()
 		break;
 	case 6: // ------------------------------------------ Estado S150
 		pSaida->impMensa("\tSaldo 150");
-		option = inputOption();
+		inputOption(); //@@@@@@@@@ ISR
 		if (option == 1)
 		{
 			setEstAtual(6);
@@ -300,7 +282,7 @@ void MaquinaRefri::logicaEstados()
 		}
 		else if (6 < option && option < 11)
 		{ // Operator Mode
-			modoOperador(option);
+			modoOperador(); //@@@@@@@@@ ISR
 			saida = false;
 		}
 		else
@@ -320,27 +302,24 @@ void MaquinaRefri::setEstAtual(int estado)
 	estAtual = estado;
 };
 
-void MaquinaRefri::modoOperador(int newOption)
+void MaquinaRefri::modoOperador()
 {
-	int login, password, optionLog;
-	bool saidaOperador = false;
+	int login;
 	bool logSolicitado = false;
 	bool validez;
 
 	// Verifica password do Operador. Si válido o requisitado é apresentado.
 	pSaida->impMensa("\t\tIngresse password para consultar: ");
-	password = pEntrada->getOperatorPassword(); // iserir password
-	validez = verificaPassword(password);		// true: valido, false: invalido
+	inputPassword(); // inserir password //@@@@@@@@@ ISR
+	validez = verificaPassword();		// true: valido, false: invalido
 
 	if (validez)
 	{
-		pSaida->impMensa("\tOperador de Log valido");
-
-		optionLog = newOption; // pEntrada->getInputOperator();
+		pSaida->impMensa("\t\t<<<Operador de Log valido>>>\n");
 
 		cadVenda.fifoToList();
 
-		switch (optionLog)
+		switch (option)
 		{
 		case 7: // Listar total valor de vendas
 			cout << "Total vendas: " << cadVenda.getNumeroVendas() << endl;
@@ -350,15 +329,13 @@ void MaquinaRefri::modoOperador(int newOption)
 			cout << "Total de ETIRPS: " << cadVenda.getNumeroETIRPS() << endl;
 			break;
 		case 9: // Listar periodo de dia com mais vendas
-			cout << "Nao implementado." << endl;
+			cadVenda.getNumeroVendasDia();
 			break;
-		case 10: // Listar historico de vendas
-			cout << "Nao implementado." << endl;
-			break;
-		case 5: // saida modo operador
-			saidaOperador = true;
+		case 10: // Listar historico de vendas			
+			cadVenda.listarHistorico();
 			break;
 		default:
+				cout << "\n\tIndefined FLAG\n";
 			break;
 		}
 	}
@@ -368,10 +345,21 @@ void MaquinaRefri::modoOperador(int newOption)
 	}
 }
 
-// Verifica se o password usado pelo Operador corresponde com o cadastrado
-bool MaquinaRefri::verificaPassword(int newPassword)
+void MaquinaRefri::inputPassword()
 {
-	if (newPassword == passwordOperator)
+#if INTERFACE == 1 || INTERFACE == 3 // Using PC (diretivas de compilação para processdor)
+	pEntrada = new TecladoPc();
+#else // Using Atlys
+	pEntrada = new TecladoAtlys();
+#endif
+	//
+	passwordInserido = pEntrada->getOperatorPassword();
+}
+
+// Verifica se o password usado pelo Operador corresponde com o cadastrado
+bool MaquinaRefri::verificaPassword()
+{
+	if (passwordInserido == passwordOperator)
 		return true;
 	else
 		return false;

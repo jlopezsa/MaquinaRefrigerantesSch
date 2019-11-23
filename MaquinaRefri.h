@@ -1,14 +1,9 @@
 #ifndef MAQUINAREFRI
 #define MAQUINAREFRI
 
-#define INTERFACE 1 // 1 = PC  || 2 = ATLYS
-
 #include "InterfaceIn.h"
 #include "InterfaceOut.h"
 #include "CadastroVenda.h"
-#include "ConsultaLog.h"
-
-
 
 class MaquinaRefri
 {
@@ -17,14 +12,17 @@ class MaquinaRefri
 	CadastroVenda cadVenda;
 	int estAtual;
 	int passwordOperator;
+	int passwordInserido;
+	int option;
 public:
 	MaquinaRefri();
 	void inicia();
 	void setEstAtual(int);
-	void modoOperador(int);
-	bool verificaPassword(int);
+	void modoOperador();
+	bool verificaPassword();
 	void logicaEstados();
-	int inputOption();
+	void inputOption();
+	void inputPassword();
 	void showMenu();
 #if INTERFACE == 1 || INTERFACE == 3			// Using PC (diretivas de compilação para processdor)
 	time_t timer, timerFim; // contabiliza segundos no PC

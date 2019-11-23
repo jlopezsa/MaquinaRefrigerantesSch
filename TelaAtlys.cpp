@@ -22,10 +22,10 @@ void TelaAtlys::menu(){
 	cout << "\t\t(SW0 & BTNU)\t- USUARIO: Solicitar devolucao" << endl;
 	cout << "\t\t(BTNU)\t\t- USUARIO: Escolher refrigerante MEETS" << endl;
 	cout << "\t\t(BTND)\t\t- USUARIO: Escolher refrigerante ETIRPS" << endl;
-	cout << "\t\t(SW1 & BTNL) - OPERADOR: Visualizar Valor total de vendas" << endl;
-	cout << "\t\t(SW1 & BTNC) - OPERADOR: Qauntidade vendida de cada refrigerante" << endl;
-	cout << "\t\t(SW1 & BTNR) - OPERADOR: Periodo do dia com mais vendas" << endl;
-	cout << "\t\t(SW1 & BTNU) - OPERADOR: Historico de vendas" << endl;
+	cout << "\t\t(SW1 & BTNL)\t - OPERADOR: Visualizar Valor total de vendas" << endl;
+	cout << "\t\t(SW1 & BTNC)\t - OPERADOR: Qauntidade vendida de cada refrigerante" << endl;
+	cout << "\t\t(SW1 & BTNR)\t - OPERADOR: Periodo do dia com mais vendas" << endl;
+	cout << "\t\t(SW1 & BTNU)\t - OPERADOR: Historico de vendas" << endl;
 };
 
 void TelaAtlys::setOutput(int outOption){
