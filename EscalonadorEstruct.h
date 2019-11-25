@@ -32,14 +32,14 @@ private:
     task_t GBL_task_table[MAX_TASKS]; // tabela global de tarefas
     task_t taskToSchedule;
     FilaFifo<task_t> fifoReady;
-    int stateScheduler;
+    int schedulerStates;
 public:
     EscalonadorEstruct();
     ~EscalonadorEstruct();
     void init_Task_Timers(void); // inicializa todas as tarefas em 0
     //template <typename TASKTYPE, typename OBJECTTYPE>
     int addTask(void (MaquinaRefri::*task)(void), MaquinaRefri *newObject, int time, int priority);
-    int addTaskFifoReady(void (MaquinaRefri::*task)(void), MaquinaRefri *newObject, int time);
+    int addTaskFifoReady(void (MaquinaRefri::*task)(void), MaquinaRefri *newObject, int time, int priority);
     //void removeTask(void (*task)(void));
     void Enable_Task(int task_number);
     void Disable_Task(int task_number);

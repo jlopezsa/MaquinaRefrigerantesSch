@@ -48,7 +48,7 @@ int EscalonadorEstruct::addTask(void (MaquinaRefri::*task)(void), MaquinaRefri *
 //
 //
 //
-int EscalonadorEstruct::addTaskFifoReady(void (MaquinaRefri::*task)(void), MaquinaRefri *newObject, int time)
+int EscalonadorEstruct::addTaskFifoReady(void (MaquinaRefri::*task)(void), MaquinaRefri *newObject, int time, int priority)
 {
     unsigned int t_time;
     /* Verifica se a prioridade é válida */
@@ -136,8 +136,8 @@ void EscalonadorEstruct::Run_RTC_Scheduler()
 //
 /*declara uma função que será uma rotina de serviço
 de interrupção (ISR - Interrupt Service Routine) de prioridade alta*/
-#pragma INTERRUPT tick_timer_intr
 //template<typename TYPEFUNC,typename TASKTYPE,typename OBJECTTYPE>
+#pragma INTERRUPT tick_timer_intr
 void EscalonadorEstruct::tick_timer_intr(void)
 {
     //cout << "FLAG TEST: into tick_timer_intr  0000000" << endl;
@@ -176,13 +176,25 @@ void EscalonadorEstruct::Request_Task_Run(int task_number)
 
 void EscalonadorEstruct::schedulerStatesLogic()
 {
-    switch (stateScheduler)
+    switch (schedulerStates)
     {
     case 0: // created
         break;
     case 1: // ready
+            // add task to fifoReady (enqueue)
+            // if priReady > priRunning
+            // schedulerStates = 2
         break;
-    case 2: // runnin
+    case 2: // running
+            // (dequeue)
+            // executing task
+            // while priRunning > priReady || delay > 0
+            //      delay --
+            // if priRunning < pryReady && delay > 0 
+            //      schedulerStates = 1
+            // if delay == 0
+            //      schedulerStates = 4
+            // if ???? para ir no waiting
         break;
     case 3: // waiting
         break;

@@ -26,10 +26,10 @@ int main(){
 	//projectEscVoid.addTask(pShowMenu,ptrMaquina,10,0);
 	//projectEscVoid.addTask(pLogicaEstados,ptrMaquina,10,1);
 	//projectEscVoid.addTask(pInputOption,ptrMaquina,10,2);
-	projectEscVoid.addTaskFifoReady(pShowMenu,ptrMaquina,10);
-	projectEscVoid.addTaskFifoReady(pLogicaEstados,ptrMaquina,10);
-	projectEscVoid.addTaskFifoReady(pInputOption,ptrMaquina,10);
-	projectEscVoid.Run_RTC_Scheduler(); // Executa a tarefa
+	projectEscVoid.addTaskFifoReady(pShowMenu,ptrMaquina,10,0);
+	projectEscVoid.addTaskFifoReady(pLogicaEstados,ptrMaquina,10,1);
+	projectEscVoid.addTaskFifoReady(pInputOption,ptrMaquina,10,2);
+	//projectEscVoid.Run_RTC_Scheduler(); // Executa a tarefa
 
 	do
 	{
