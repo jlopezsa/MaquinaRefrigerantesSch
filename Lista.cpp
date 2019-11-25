@@ -111,29 +111,29 @@ void Lista<NODETYPE>::insertionSort(NODETYPE value)
    if (head == 0) // Insere primeiro nodo
    {
       head = new Node<NODETYPE>(value, head);
-      Node<NODETYPE> i;
+      NODETYPE i;
       i = head->getData();
    }
    else
    {
-      Node<NODETYPE> pint;
-      Node<NODETYPE> auxint;
+      NODETYPE pint;
+      NODETYPE auxint;
       pint = q->getData();
       auxint = pint;
-      while ((q != 0) && (auxint < value))
+      while ((q != 0) && (auxint.priorityID < value.priorityID))
       {
          p = q;
-         q = p->getNext();
+         q = p->getProx();
          if (q != 0)
          {
-            pint = q->getVal();
+            pint = q->getData();
             auxint = pint;
          }
       }
       if (p == q)
          head = new Node<NODETYPE>(value, head);
       else
-         p->setNext(new Node<NODETYPE>(value, q));
+         p->setProx(new Node<NODETYPE>(value, q));
    }
 }
 

@@ -2,7 +2,10 @@
 #include "Timer.cpp"
 
 //template<typename TYPEFUNC,typename TASKTYPE,typename OBJECTTYPE>
-EscalonadorEstruct::EscalonadorEstruct(){};
+EscalonadorEstruct::EscalonadorEstruct()
+{
+    schedulerStates = 0;
+};
 //
 //template<typename TYPEFUNC,typename TASKTYPE,typename OBJECTTYPE>
 EscalonadorEstruct::~EscalonadorEstruct(){};
@@ -21,6 +24,24 @@ void EscalonadorEstruct::init_Task_Timers()
         GBL_task_table[i].period = 0;
         GBL_task_table[i].enabled = 0;
     }
+
+    taskToSchedule.priorityID = 0;
+    taskToSchedule.ptrObject = NULL;
+    taskToSchedule.task = NULL;
+    taskToSchedule.ready = 0;
+    taskToSchedule.delay = 0;
+    taskToSchedule.period = 0;
+    taskToSchedule.enabled = 0;
+    taskToSchedule.io_status = 0;
+    //
+    runningTask.priorityID = 0;
+    runningTask.ptrObject = NULL;
+    runningTask.task = NULL;
+    runningTask.ready = 0;
+    runningTask.delay = 0;
+    runningTask.period = 0;
+    runningTask.enabled = 0;
+    runningTask.io_status = 0;
 };
 //
 //
@@ -48,13 +69,14 @@ int EscalonadorEstruct::addTask(void (MaquinaRefri::*task)(void), MaquinaRefri *
 //
 //
 //
-int EscalonadorEstruct::addTaskFifoReady(void (MaquinaRefri::*task)(void), MaquinaRefri *newObject, int time, int priority)
+int EscalonadorEstruct::addTaskReadyEstruct(void (MaquinaRefri::*task)(void), MaquinaRefri *newObject, int time, int priority)
 {
     unsigned int t_time;
     /* Verifica se a prioridade é válida */
     /* Verifica se sobre-escreve uma tarefa escalonada */
 
     /* Escalona a tarefa */
+    taskToSchedule.priorityID = priority;
     taskToSchedule.ptrObject = newObject;
     taskToSchedule.task = task;
     taskToSchedule.ready = 0;
@@ -62,31 +84,16 @@ int EscalonadorEstruct::addTaskFifoReady(void (MaquinaRefri::*task)(void), Maqui
     taskToSchedule.period = time;
     taskToSchedule.enabled = 1;
 
-    fifoReady.enqueue(taskToSchedule);
+    readyEstruct.insertionSort(taskToSchedule);
     return 1;
 }
 //
 //
-//
-/*
-void Escalonador::removeTask(void (*task)(void))
+int EscalonadorEstruct::removeTask(void (MaquinaRefri::*task)(void), MaquinaRefri *newObject)
 {
-    int i;
-    for (i = 0; i < MAX_TASKS; i++)
-    {
-        if (GBL_task_list[i].task == task)
-        {
-            GBL_task_list[i].task = NULL;
-            GBL_task_list[i].ready = 0; // era run. verificar isso
-            GBL_task_list[i].delay = 0;
-            GBL_task_list[i].period = 0;
-            GBL_task_list[i].enabled = 0;
-            return;
-        }
-    }
-};
-*/
-//
+    readyEstruct.removeFirst();
+    return 1;
+}
 //
 //
 //template<typename TYPEFUNC,typename TASKTYPE,typename OBJECTTYPE>
@@ -104,6 +111,28 @@ void EscalonadorEstruct::Disable_Task(int task_number)
 }
 //
 //
+void EscalonadorEstruct::Run_RTC_SchedulerEstruct()
+{ // Sempre executando
+    int i;
+    //GBL_run_scheduler = 1;
+    while (1)
+    { // Laço infinito; verifica cada tarefa
+        if ((runningTask.task != NULL) &&
+            // Verifica se habilitada
+            (runningTask.enabled == 1) &&
+            // Verifica se está pronta para executar
+            (runningTask.ready == 1))
+        { // se (task!=NULL & enable==1 & ready==1)
+            cout << "\n\n\t\tFLAG TEST: into RUN Scheduler <" << setfill('-') << setw(50) << "Execut function" << endl;
+            //(pT->*GBL_task_table[i].task)();       // Executa a tarefa
+            (runningTask.ptrObject->*runningTask.task)(); // <<<<<<<< Executa a tarefa
+            runningTask.ready = 0;
+            break;
+        } // if
+        init_Task_TimersStruct();
+        objTimer.start(1);
+    } // while 1
+}
 //
 //template<typename TYPEFUNC,typename TASKTYPE,typename OBJECTTYPE>
 void EscalonadorEstruct::Run_RTC_Scheduler()
@@ -133,6 +162,30 @@ void EscalonadorEstruct::Run_RTC_Scheduler()
 }
 //
 //
+#pragma INTERRUPT tick_timer_intr
+void EscalonadorEstruct::init_Task_TimersStruct(void)
+{
+    //cout << "FLAG TEST: into tick_timer_intr  0000000" << endl;
+    //static char i;
+    int i;
+    cout << "\t\tDelay task 0: " << setfill(' ') << setw(2) << runningTask.delay << endl;
+    
+        //cout << "FLAG TEST: into tick_timer_intr for " << i << endl;
+        if ((runningTask.task != NULL) && //Se for escalonada
+            (runningTask.enabled == 1) &&
+            (runningTask.delay != 0))
+        { // se (task!=NULL & enable==1 & delay!=0)
+            //cout << "FLAG TEST: into tick_timer_intr if  1 delay: " << GBL_task_table[i].delay << endl;
+            runningTask.delay--; // delay Decrementa
+            if (runningTask.delay == 0)
+            {
+                //cout << "FLAG TEST: into tick_timer_intr  2" << endl;
+                runningTask.ready = 1; // ready = 1
+                runningTask.delay = runningTask.period;
+            } // if delay == 0
+        }     // if
+}
+
 //
 /*declara uma função que será uma rotina de serviço
 de interrupção (ISR - Interrupt Service Routine) de prioridade alta*/
@@ -176,29 +229,42 @@ void EscalonadorEstruct::Request_Task_Run(int task_number)
 
 void EscalonadorEstruct::schedulerStatesLogic()
 {
+    int toStart;
     switch (schedulerStates)
     {
     case 0: // created
+        //cout << "CREATED: Aperte tecla para iniciar: ";
+        //cin >> toStart;
+        schedulerStates = 1;
         break;
     case 1: // ready
-            // add task to fifoReady (enqueue)
-            // if priReady > priRunning
-            // schedulerStates = 2
+        //cout << "READY: aperte tecla para continuar: ";
+        if (readyEstruct.readFirst().priorityID >= runningTask.priorityID) // if priReady > priRunning
+            schedulerStates = 2;
+        //cin >> toStart;
         break;
     case 2: // running
-            // (dequeue)
-            // executing task
-            // while priRunning > priReady || delay > 0
-            //      delay --
-            // if priRunning < pryReady && delay > 0 
-            //      schedulerStates = 1
-            // if delay == 0
-            //      schedulerStates = 4
-            // if ???? para ir no waiting
+        //cout << "RUNNING 1: state\n";
+        runningTask = readyEstruct.readFirst();
+        readyEstruct.removeFirst();
+        Run_RTC_SchedulerEstruct();
+        if(runningTask.ready == 0)
+            schedulerStates = 4;
+        // executing task
+        // while priRunning > priReady || delay > 0
+        //      delay --
+        // if priRunning < pryReady && delay > 0
+        //      schedulerStates = 1
+        // if delay == 0
+        //      schedulerStates = 4
+        // if ???? para ir no waiting
         break;
     case 3: // waiting
         break;
     case 4: // terminated
+        cout << "TERMINATED: \n";
+        terminatedTask = runningTask;
+        schedulerStates = 1;
         break;
     default:
         break;
