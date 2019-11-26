@@ -4,7 +4,7 @@
 //template<typename TYPEFUNC,typename TASKTYPE,typename OBJECTTYPE>
 EscalonadorEstruct::EscalonadorEstruct()
 {
-    schedulerStates = 0;
+    schedulerStates = 0;   
 };
 //
 //template<typename TYPEFUNC,typename TASKTYPE,typename OBJECTTYPE>

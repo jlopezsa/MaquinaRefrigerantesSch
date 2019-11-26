@@ -9,6 +9,12 @@ using namespace std;
 #include "MaquinaRefri.cpp"
 #include "EscalonadorEstruct.cpp"
 
+#if INTERFACE == 1 // Using PC (diretivas de compilação para processdor)
+#include <pthread.h>
+#else // Using Atlys
+
+#endif
+
 typedef struct
 {
 	int priority;
@@ -29,18 +35,20 @@ int main()
 	void (MaquinaRefri::*pShowMenu)() = &MaquinaRefri::showMenu;		   // Deitel pg 972
 	void (MaquinaRefri::*pLogicaEstados)() = &MaquinaRefri::logicaEstados; // Deitel pg 972
 	void (MaquinaRefri::*pInputOption)() = &MaquinaRefri::inputOption;	 // Deitel pg 972
+	//void (MaquinaRefri::*pExemploThread)() = &MaquinaRefri::exemploThread;	 // Deitel pg 972
 
 	projectEscVoid.init_Task_Timers();
-	projectEscVoid.addTaskReadyEstruct(pShowMenu, ptrMaquina, 5, 0);
-	projectEscVoid.addTaskReadyEstruct(pLogicaEstados, ptrMaquina, 5, 1);
-	projectEscVoid.addTaskReadyEstruct(pInputOption, ptrMaquina, 5, 2);
-	/*
+
+	//projectEscVoid.addTaskReadyEstruct(pExemploThread, ptrMaquina, 5, 3);
+
 	do
 	{
+		projectEscVoid.addTaskReadyEstruct(pShowMenu, ptrMaquina, 10, 0);
+		projectEscVoid.addTaskReadyEstruct(pLogicaEstados, ptrMaquina, 10, 1);
+		projectEscVoid.addTaskReadyEstruct(pInputOption, ptrMaquina, 10, 2);
 		projectEscVoid.schedulerStatesLogic();
 	} while (1);
 	//projectEscVoid.Run_RTC_Scheduler(); // Executa a tarefa
-	*/
 
 	//----------------
 	// testando lista
@@ -65,8 +73,7 @@ int main()
 	*/
 	//----------------
 
-	
-	do	
+	do
 	{
 		objMaquina.showMenu();
 		objMaquina.logicaEstados();

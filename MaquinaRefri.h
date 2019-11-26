@@ -14,6 +14,7 @@ class MaquinaRefri
 	int passwordOperator;
 	int passwordInserido;
 	int option;
+	pthread_t threadExemploThread;
 public:
 	MaquinaRefri();
 	void inicia();
@@ -24,6 +25,8 @@ public:
 	void inputOption();
 	void inputPassword();
 	void showMenu();
+	static void* exemploThread(void *);
+	//static void* thread_fun( void* args ) ;
 #if INTERFACE == 1 || INTERFACE == 3			// Using PC (diretivas de compilação para processdor)
 	time_t timer, timerFim; // contabiliza segundos no PC
 #else						// Using Atlys

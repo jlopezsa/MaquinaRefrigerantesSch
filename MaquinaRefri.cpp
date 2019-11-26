@@ -17,17 +17,31 @@ MaquinaRefri::MaquinaRefri()
 
 #if INTERFACE == 1 // Using PC (diretivas de compilação para processdor)
 	time(&timer);
+
+	pthread_t threadInputOption;
+	pthread_create(&threadExemploThread, NULL, &MaquinaRefri::exemploThread, NULL);
+
+	//pthread_create(&threadInputOption, NULL,&MaquinaRefri::inputOption, NULL);
 #else // Using Atlys
 	inicio = clock();
 #endif
 };
 
+void *MaquinaRefri::exemploThread(void *)
+{
+	int testeIn;
+	while (1)
+	{
+		cin >> testeIn;
+		if (testeIn == 0){
+			cout << ".................. THREAD executando ................" << endl;
+			break;
+		}
+	}
+}
 
 void MaquinaRefri::inicia()
 {
-
-	//struct tm *timeinfo; // timeinfo é o ponteiro
-
 	// padrão para configurar hora (year, month, day, hora, min, sec, true is Pm)
 	cadVenda.setDataHora(2019, 11, 25, 11, 59, 40, true); // Configuração inicial da DataHora
 
@@ -39,7 +53,7 @@ void MaquinaRefri::inicia()
 	std::cout << "*                                                           " << std::endl;
 	std::cout << "************************************************************" << std::endl;
 
-	setEstAtual(0); // Configura estado inicial da Maquina de Estados	
+	setEstAtual(0); // Configura estado inicial da Maquina de Estados
 
 	/*
 	TecladoPc *pT;
@@ -60,6 +74,7 @@ void MaquinaRefri::inicia()
 
 void MaquinaRefri::inputOption()
 {
+	cout << "showMenu() executing..." << endl;
 #if INTERFACE == 1 || INTERFACE == 3 // Using PC (diretivas de compilação para processdor)
 	pEntrada = new TecladoPc();
 #else // Using Atlys
@@ -72,10 +87,13 @@ void MaquinaRefri::inputOption()
 //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 //
 void MaquinaRefri::logicaEstados()
-{
+{	
+	cout << "logicaEstados() executing..." << endl;
+	pthread_join(threadExemploThread, NULL);
+
 	//---- Variaveis
 	bool saida = false;
-	int segundos = 0; // usado para contar os segundos transcurridos
+	int segundos = 0;				 // usado para contar os segundos transcurridos
 #if INTERFACE == 1 || INTERFACE == 3 // Using PC (diretivas de compilação para processdor)
 	pSaida = new TelaPc();
 #else // Using Atlys
@@ -95,7 +113,7 @@ void MaquinaRefri::logicaEstados()
 			setEstAtual(4);
 		else if (6 < option && option < 11) // else if (pEntrada->getInputOperator() == 7,8,9,10)
 		{									// Operator Mode
-			modoOperador(); //@@@@@@@@@ ISR
+			modoOperador();					//@@@@@@@@@ ISR
 		}
 		else
 			setEstAtual(0);
@@ -115,7 +133,7 @@ void MaquinaRefri::logicaEstados()
 			pSaida->setOutput(25); // D025
 		}
 		else if (6 < option && option < 11)
-		{ // Operator Mode
+		{					// Operator Mode
 			modoOperador(); //@@@@@@@@@ ISR
 			saida = false;
 		}
@@ -138,7 +156,7 @@ void MaquinaRefri::logicaEstados()
 			pSaida->setOutput(50); // D050
 		}
 		else if (6 < option && option < 11)
-		{ // Operator Mode
+		{					// Operator Mode
 			modoOperador(); //@@@@@@@@@ ISR
 			saida = false;
 		}
@@ -163,7 +181,7 @@ void MaquinaRefri::logicaEstados()
 			pSaida->setOutput(75); // D075
 		}
 		else if (6 < option && option < 11)
-		{ // Operator Mode
+		{					// Operator Mode
 			modoOperador(); //@@@@@@@@@ ISR
 			saida = false;
 		}
@@ -188,7 +206,7 @@ void MaquinaRefri::logicaEstados()
 			pSaida->setOutput(100); // D100
 		}
 		else if (6 < option && option < 11)
-		{ // Operator Mode
+		{					// Operator Mode
 			modoOperador(); //@@@@@@@@@ ISR
 			saida = false;
 		}
@@ -216,7 +234,7 @@ void MaquinaRefri::logicaEstados()
 			pSaida->setOutput(125); // D125
 		}
 		else if (6 < option && option < 11)
-		{ // Operator Mode
+		{					// Operator Mode
 			modoOperador(); //@@@@@@@@@ ISR
 			saida = false;
 		}
@@ -281,7 +299,7 @@ void MaquinaRefri::logicaEstados()
 					  << endl;
 		}
 		else if (6 < option && option < 11)
-		{ // Operator Mode
+		{					// Operator Mode
 			modoOperador(); //@@@@@@@@@ ISR
 			saida = false;
 		}
@@ -310,8 +328,8 @@ void MaquinaRefri::modoOperador()
 
 	// Verifica password do Operador. Si válido o requisitado é apresentado.
 	pSaida->impMensa("\t\tIngresse password para consultar: ");
-	inputPassword(); // inserir password //@@@@@@@@@ ISR
-	validez = verificaPassword();		// true: valido, false: invalido
+	inputPassword();			  // inserir password //@@@@@@@@@ ISR
+	validez = verificaPassword(); // true: valido, false: invalido
 
 	if (validez)
 	{
@@ -331,11 +349,11 @@ void MaquinaRefri::modoOperador()
 		case 9: // Listar periodo de dia com mais vendas
 			cadVenda.getNumeroVendasDia();
 			break;
-		case 10: // Listar historico de vendas			
+		case 10: // Listar historico de vendas
 			cadVenda.listarHistorico();
 			break;
 		default:
-				cout << "\n\tIndefined FLAG\n";
+			cout << "\n\tIndefined FLAG\n";
 			break;
 		}
 	}
@@ -367,6 +385,7 @@ bool MaquinaRefri::verificaPassword()
 
 void MaquinaRefri::showMenu()
 {
+	cout << "showMenu() executing..." << endl;
 #if INTERFACE == 1 || INTERFACE == 3 // Using PC (diretivas de compilação para processdor)
 	pSaida = new TelaPc();
 #else // Using Atlys
