@@ -238,11 +238,12 @@ void EscalonadorEstruct::schedulerStatesLogic()
     case 0: // created
         //cout << "CREATED: Aperte tecla para iniciar: ";
         //cin >> toStart;
-        schedulerStates = 1;
+        
+        schedulerStates = 2;
         break;
     case 1: // ready
         //cout << "READY: aperte tecla para continuar: ";
-        if (readyEstruct.readFirst().priorityID >= runningTask.priorityID) // if priReady > priRunning
+        //if (readyEstruct.readFirst().priorityID >= runningTask.priorityID) // if priReady > priRunning
             schedulerStates = 2;
         //cin >> toStart;
         break;
@@ -267,7 +268,7 @@ void EscalonadorEstruct::schedulerStatesLogic()
     case 4: // terminated
         cout << "TERMINATED: \n";
         terminatedTask = runningTask;
-        schedulerStates = 1;
+        schedulerStates = 2;
         break;
     default:
         break;

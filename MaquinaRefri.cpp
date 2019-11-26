@@ -20,7 +20,6 @@ MaquinaRefri::MaquinaRefri()
 
 	pthread_t threadInputOption;
 	pthread_create(&threadExemploThread, NULL, &MaquinaRefri::exemploThread, NULL);
-
 	//pthread_create(&threadInputOption, NULL,&MaquinaRefri::inputOption, NULL);
 #else // Using Atlys
 	inicio = clock();
