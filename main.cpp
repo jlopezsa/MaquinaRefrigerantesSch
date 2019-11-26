@@ -34,11 +34,13 @@ int main()
 	projectEscVoid.addTaskReadyEstruct(pShowMenu, ptrMaquina, 5, 0);
 	projectEscVoid.addTaskReadyEstruct(pLogicaEstados, ptrMaquina, 5, 1);
 	projectEscVoid.addTaskReadyEstruct(pInputOption, ptrMaquina, 5, 2);
+	/*
 	do
 	{
 		projectEscVoid.schedulerStatesLogic();
 	} while (1);
 	//projectEscVoid.Run_RTC_Scheduler(); // Executa a tarefa
+	*/
 
 	//----------------
 	// testando lista
@@ -63,12 +65,12 @@ int main()
 	*/
 	//----------------
 
-	/*
-	do
+	
+	do	
 	{
 		objMaquina.showMenu();
 		objMaquina.logicaEstados();
 	} while (1);
-*/
+
 	return 0;
 }

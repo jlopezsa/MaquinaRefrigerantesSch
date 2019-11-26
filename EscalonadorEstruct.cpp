@@ -169,21 +169,21 @@ void EscalonadorEstruct::init_Task_TimersStruct(void)
     //static char i;
     int i;
     cout << "\t\tDelay task 0: " << setfill(' ') << setw(2) << runningTask.delay << endl;
-    
-        //cout << "FLAG TEST: into tick_timer_intr for " << i << endl;
-        if ((runningTask.task != NULL) && //Se for escalonada
-            (runningTask.enabled == 1) &&
-            (runningTask.delay != 0))
-        { // se (task!=NULL & enable==1 & delay!=0)
-            //cout << "FLAG TEST: into tick_timer_intr if  1 delay: " << GBL_task_table[i].delay << endl;
-            runningTask.delay--; // delay Decrementa
-            if (runningTask.delay == 0)
-            {
-                //cout << "FLAG TEST: into tick_timer_intr  2" << endl;
-                runningTask.ready = 1; // ready = 1
-                runningTask.delay = runningTask.period;
-            } // if delay == 0
-        }     // if
+
+    //cout << "FLAG TEST: into tick_timer_intr for " << i << endl;
+    if ((runningTask.task != NULL) && //Se for escalonada
+        (runningTask.enabled == 1) &&
+        (runningTask.delay != 0))
+    { // se (task!=NULL & enable==1 & delay!=0)
+        //cout << "FLAG TEST: into tick_timer_intr if  1 delay: " << GBL_task_table[i].delay << endl;
+        runningTask.delay--; // delay Decrementa
+        if (runningTask.delay == 0)
+        {
+            //cout << "FLAG TEST: into tick_timer_intr  2" << endl;
+            runningTask.ready = 1; // ready = 1
+            runningTask.delay = runningTask.period;
+        } // if delay == 0
+    }     // if
 }
 
 //
@@ -226,7 +226,10 @@ void EscalonadorEstruct::Request_Task_Run(int task_number)
 {
     GBL_task_table[task_number].ready = 1;
 }
-
+//
+//
+//
+//
 void EscalonadorEstruct::schedulerStatesLogic()
 {
     int toStart;
@@ -248,7 +251,7 @@ void EscalonadorEstruct::schedulerStatesLogic()
         runningTask = readyEstruct.readFirst();
         readyEstruct.removeFirst();
         Run_RTC_SchedulerEstruct();
-        if(runningTask.ready == 0)
+        if (runningTask.ready == 0)// && runningTask.io_status == 0)
             schedulerStates = 4;
         // executing task
         // while priRunning > priReady || delay > 0

@@ -29,7 +29,7 @@ void MaquinaRefri::inicia()
 	//struct tm *timeinfo; // timeinfo é o ponteiro
 
 	// padrão para configurar hora (year, month, day, hora, min, sec, true is Pm)
-	cadVenda.setDataHora(2019, 12, 31, 11, 59, 40, true); // Configuração inicial da DataHora
+	cadVenda.setDataHora(2019, 11, 25, 11, 59, 40, true); // Configuração inicial da DataHora
 
 	std::cout << "************************************************************" << std::endl;
 	std::cout << "*           Maquina de venda de refrigerantes               " << std::endl;
