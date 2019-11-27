@@ -1,9 +1,5 @@
-#include <iostream>
-#include <string>
-using namespace std;
-
-#include "InterfaceIn.cpp"
 #include "TecladoPc.h"
+#include "InterfaceIn.cpp"
 
 int TecladoPc::getInput()
 {
@@ -88,6 +84,7 @@ int TecladoPc::getOperatorPassword()
 
 	try
 	{
+		// STOI funcionam para compiladores que soportam C++11 o maiores
 		operatorPassword = std::stoi(operatorPasswordString);
 		return operatorPassword;
 	}

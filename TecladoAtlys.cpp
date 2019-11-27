@@ -2,7 +2,7 @@
 #include <string>
 using namespace std;
 
-//#include "InterfaceIn.cpp"
+#include "InterfaceIn.cpp"
 #include "TecladoAtlys.h"
 
 volatile unsigned int *data = (volatile unsigned int *)0x80000a00; // 1000 ... 0000 1010 0000 0000
@@ -13,7 +13,7 @@ int TecladoAtlys::getInput()
 
     do
     {
-    } while (*data != 131072 && *data != 1048576 && *data != 524288 && *data != 65792 && *data != 65536 && *data != 262144 && *data != 262400 && *data != 1049088 && *data != 524800 && *data != 66048);
+    } while (*data != 131072 && *data != 1048576 && *data != 524288 && *data != 65792 && *data != 65536 && *data != 262144 && *data !=131584  && *data != 1049088 && *data != 524800 && *data != 66048);
 
     if (*data == 131072) // BTNL
         optionUser = 1;

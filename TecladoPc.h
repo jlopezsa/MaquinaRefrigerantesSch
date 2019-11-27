@@ -1,5 +1,9 @@
-#ifndef TECLADO
-#define TECLADO
+#ifndef TECLADOPC
+#define TECLADOPC
+
+#include <iostream>
+#include <string>
+using namespace std;
 
 #include "InterfaceIn.h"
 
@@ -16,4 +20,4 @@ public:
 	int getInputOperator();
 };
 
-#endif // TECLADO
+#endif // TECLADOPC

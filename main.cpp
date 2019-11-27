@@ -5,20 +5,30 @@ using namespace std;
 
 #define INTERFACE 1 // 1 = PC  || 2 = ATLYS
 
-#include "MaquinaRefri.cpp"
-//#include "EscalonadorEstruct.cpp"
-
 #if INTERFACE == 1 // Using PC (diretivas de compilação para processdor)
 #include <pthread.h>
 #else // Using Atlys
-
 #endif
 
+#include "MaquinaRefri.cpp"
+
+//https://thispointer.com/c11-start-thread-by-member-function-with-arguments/
+// Usado para criar threads de métodos não estáticos que pertencem a uma classe X
+typedef void *(*THREADFUNCPTR)(void *);
 
 int main()
 {
-
 	MaquinaRefri objMaquina;
+
+#if INTERFACE == 1 // Using PC (diretivas de compilação para processdor)
+	pthread_t th_input;
+	pthread_t th_password;
+	//MaquinaRefri * pTh = new MaquinaRefri();
+	pthread_create(&th_input, NULL, (THREADFUNCPTR)&MaquinaRefri::inputOption, NULL);
+	//pthread_create(&th_password, NULL, (THREADFUNCPTR)&MaquinaRefri::inputPassword, NULL);
+#else // Using Atlys
+#endif
+
 	objMaquina.inicia();
 
 	/*

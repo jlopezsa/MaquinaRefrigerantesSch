@@ -5,12 +5,16 @@
 using namespace std;
 
 #include "MaquinaRefri.h"
-#include "TelaPc.cpp"
-#include "TelaAtlys.cpp"
-#include "TecladoPc.cpp"
-#include "TecladoAtlys.cpp"
 #include "CadastroVenda.cpp"
 #include "EscalonadorEstruct.cpp"
+#include "TelaPc.cpp"
+#include "TelaAtlys.cpp"
+
+#if INTERFACE == 1  // Using PC (diretivas de compilação para processador)	
+#include "TecladoPc.cpp"
+#else // Using Atlys
+#include "TecladoAtlys.cpp"
+#endif
 
 MaquinaRefri::MaquinaRefri()
 {
@@ -18,10 +22,7 @@ MaquinaRefri::MaquinaRefri()
 	setEstAtual(0); // Configura estado inicial da Maquina de Estados
 #if INTERFACE == 1  // Using PC (diretivas de compilação para processdor)
 	time(&timer);
-
-	//pthread_t threadInputOption;
-	//pthread_create(&threadExemploThread, NULL, &MaquinaRefri::exemploThread, NULL);
-	//pthread_create(&threadInputOption, NULL,&MaquinaRefri::inputOption, NULL);
+	//pthread_create(&threadExemploThread, NULL, &MaquinaRefri::exemploThread, NULL); // for static method
 #else // Using Atlys
 	inicio = clock();
 #endif
@@ -36,6 +37,7 @@ EscalonadorEstruct projectEscVoid;
 void *MaquinaRefri::exemploThread(void *)
 {
 	int testeIn;
+	cout << "====== Testeando funcao com ponteiro ======" << endl;
 	while (1)
 	{
 		cin >> testeIn;
@@ -87,9 +89,12 @@ void MaquinaRefri::inicia()
 	void (MaquinaRefri::*pShowMenu)() = &MaquinaRefri::showMenu;		   // Deitel pg 972
 	void (MaquinaRefri::*pLogicaEstados)() = &MaquinaRefri::logicaEstados; // Deitel pg 972
 
-	projectEscVoid.addTaskReadyEstruct(pShowMenu, ptrMaquina, 5, 0);
+	//projectEscVoid.addTaskReadyEstruct(pShowMenu, ptrMaquina, 5, 0);
 
 	projectEscVoid.init_Task_TimersStruct();
+	
+
+	//(this->exemploThread);
 
 	while (1)
 	{
@@ -377,7 +382,8 @@ void MaquinaRefri::modoOperador()
 		switch (option)
 		{
 		case 7: // Listar total valor de vendas
-			cout << "Total vendas: " << cadVenda.getNumeroVendas() << endl;
+			cout << "Total vendas:\t\t" << cadVenda.getNumeroVendas() << " refrigerantes" << endl;
+			cout << "Valor total vendido:\t" << cadVenda.getNumeroVendas()*150 << endl;
 			break;
 		case 8: // Listar quantidade vendida de cada refrigerante
 			cout << "Total de MEET:   " << cadVenda.getNumeroMEET() << endl;
