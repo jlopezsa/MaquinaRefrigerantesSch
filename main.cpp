@@ -12,9 +12,9 @@ using namespace std;
 
 #include "MaquinaRefri.cpp"
 
-//https://thispointer.com/c11-start-thread-by-member-function-with-arguments/
+//https://thispointer.com/c-how-to-pass-class-member-function-to-pthread_create/
 // Usado para criar threads de métodos não estáticos que pertencem a uma classe X
-typedef void *(*THREADFUNCPTR)(void *);
+typedef void * (*THREADFUNCPTR)(void *);
 
 int main()
 {
@@ -23,9 +23,9 @@ int main()
 #if INTERFACE == 1 // Using PC (diretivas de compilação para processdor)
 	pthread_t th_input;
 	pthread_t th_password;
-	//MaquinaRefri * pTh = new MaquinaRefri();
-	pthread_create(&th_input, NULL, (THREADFUNCPTR)&MaquinaRefri::inputOption, NULL);
-	//pthread_create(&th_password, NULL, (THREADFUNCPTR)&MaquinaRefri::inputPassword, NULL);
+	MaquinaRefri * pTh = new MaquinaRefri();
+	//pthread_create(&th_input, NULL, (THREADFUNCPTR) &MaquinaRefri::inputOption, pTh);
+	//pthread_create(&th_password, NULL, (THREADFUNCPTR)&MaquinaRefri::inputPassword, pTh);
 #else // Using Atlys
 #endif
 
