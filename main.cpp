@@ -4,10 +4,9 @@
 using namespace std;
 
 #define INTERFACE 1 // 1 = PC  || 2 = ATLYS
-#define MAX_TASKS 3 // nr. máximo de tarefas
 
 #include "MaquinaRefri.cpp"
-#include "EscalonadorEstruct.cpp"
+//#include "EscalonadorEstruct.cpp"
 
 #if INTERFACE == 1 // Using PC (diretivas de compilação para processdor)
 #include <pthread.h>
@@ -15,15 +14,14 @@ using namespace std;
 
 #endif
 
-typedef struct
-{
-	int priority;
-	float teste = 3.4;
-} struTeste;
 
 int main()
 {
 
+	MaquinaRefri objMaquina;
+	objMaquina.inicia();
+
+	/*
 	EscalonadorEstruct projectEscVoid;
 	MaquinaRefri objMaquina;
 	MaquinaRefri *ptrMaquina;
@@ -39,15 +37,16 @@ int main()
 	projectEscVoid.addTaskReadyEstruct(pShowMenu, ptrMaquina, 10, 0);
 	projectEscVoid.addTaskReadyEstruct(pLogicaEstados, ptrMaquina, 10, 1);
 	projectEscVoid.addTaskReadyEstruct(pInputOption, ptrMaquina, 10, 2);
-	projectEscVoid.schedulerStatesLogic();
 	projectEscVoid.init_Task_Timers();
 
 	//projectEscVoid.addTaskReadyEstruct(pExemploThread, ptrMaquina, 5, 3);
 
 	do
 	{
+		projectEscVoid.schedulerStatesLogic();
 		cout << "main()..." << endl;
 	} while (1);
+	*/
 	//projectEscVoid.Run_RTC_Scheduler(); // Executa a tarefa
 
 	//----------------
@@ -72,12 +71,13 @@ int main()
 	}while(!sortList.isEmpty());
 	*/
 	//----------------
-
+	/*
 	do
 	{
 		objMaquina.showMenu();
 		objMaquina.logicaEstados();
 	} while (1);
+	*/
 
 	return 0;
 }

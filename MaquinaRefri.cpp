@@ -10,35 +10,49 @@ using namespace std;
 #include "TecladoPc.cpp"
 #include "TecladoAtlys.cpp"
 #include "CadastroVenda.cpp"
+#include "EscalonadorEstruct.cpp"
 
 MaquinaRefri::MaquinaRefri()
 {
 	passwordOperator = 33;
-
-#if INTERFACE == 1 // Using PC (diretivas de compilação para processdor)
+	setEstAtual(0); // Configura estado inicial da Maquina de Estados
+#if INTERFACE == 1  // Using PC (diretivas de compilação para processdor)
 	time(&timer);
 
-	pthread_t threadInputOption;
-	pthread_create(&threadExemploThread, NULL, &MaquinaRefri::exemploThread, NULL);
+	//pthread_t threadInputOption;
+	//pthread_create(&threadExemploThread, NULL, &MaquinaRefri::exemploThread, NULL);
 	//pthread_create(&threadInputOption, NULL,&MaquinaRefri::inputOption, NULL);
 #else // Using Atlys
 	inicio = clock();
 #endif
 };
-
+//
+//
+//
+EscalonadorEstruct projectEscVoid;
+//
+//
+//
 void *MaquinaRefri::exemploThread(void *)
 {
 	int testeIn;
 	while (1)
 	{
 		cin >> testeIn;
-		if (testeIn == 0){
-			cout << ".................. THREAD executando ................" << endl;
-			break;
+		if (testeIn == 0)
+		{
+			cout << "....... THREAD executando: Insere 0................" << endl;
+			//break;
+		}
+		else
+		{
+			cout << "....... THREAD executando: Outra coisa ................" << endl;
 		}
 	}
 }
-
+//
+//
+//
 void MaquinaRefri::inicia()
 {
 	// padrão para configurar hora (year, month, day, hora, min, sec, true is Pm)
@@ -51,8 +65,6 @@ void MaquinaRefri::inicia()
 	std::cout << " 		    " << endl;
 	std::cout << "*                                                           " << std::endl;
 	std::cout << "************************************************************" << std::endl;
-
-	setEstAtual(0); // Configura estado inicial da Maquina de Estados
 
 	/*
 	TecladoPc *pT;
@@ -69,11 +81,29 @@ void MaquinaRefri::inicia()
 	//
 	projectEsc.Run_RTC_Scheduler(); // Executa a tarefa
 	*/
-}
 
+	MaquinaRefri *ptrMaquina;
+
+	void (MaquinaRefri::*pShowMenu)() = &MaquinaRefri::showMenu;		   // Deitel pg 972
+	void (MaquinaRefri::*pLogicaEstados)() = &MaquinaRefri::logicaEstados; // Deitel pg 972
+
+	projectEscVoid.addTaskReadyEstruct(pShowMenu, ptrMaquina, 5, 0);
+
+	projectEscVoid.init_Task_TimersStruct();
+
+	while (1)
+	{
+		//projectEscVoid.addTaskReadyEstruct(pLogicaEstados, ptrMaquina, 5, 0);
+		//projectEscVoid.schedulerStatesLogic();
+		showMenu();
+		logicaEstados();
+	}
+}
+//
+//
+//
 void MaquinaRefri::inputOption()
 {
-	cout << "showMenu() executing..." << endl;
 #if INTERFACE == 1 || INTERFACE == 3 // Using PC (diretivas de compilação para processdor)
 	pEntrada = new TecladoPc();
 #else // Using Atlys
@@ -83,12 +113,14 @@ void MaquinaRefri::inputOption()
 	option = pEntrada->getInput();
 }
 //
-//-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+//
 //
 void MaquinaRefri::logicaEstados()
-{	
-	cout << "logicaEstados() executing..." << endl;
-	pthread_join(threadExemploThread, NULL);
+{
+
+	//MaquinaRefri *ptrMaquina;
+	//void (MaquinaRefri::*pShowMenu)() = &MaquinaRefri::showMenu;
+	//projectEscVoid.addTaskReadyEstruct(pShowMenu, ptrMaquina, 5, 0);
 
 	//---- Variaveis
 	bool saida = false;
@@ -99,6 +131,8 @@ void MaquinaRefri::logicaEstados()
 	pSaida = new TelaAtlys();
 #endif
 	pSaida->resetOutput();
+	//cout << "<------ FLAG ------>" << endl;
+	//cout << estAtual << endl;
 	switch (estAtual)
 	{
 	case 0: // ------------------------------------------ Estado S000
@@ -313,12 +347,16 @@ void MaquinaRefri::logicaEstados()
 	//delete pSaida;
 	//delete pEntrada;
 }
-
+//
+//
+//
 void MaquinaRefri::setEstAtual(int estado)
 {
 	estAtual = estado;
 };
-
+//
+//
+//
 void MaquinaRefri::modoOperador()
 {
 	int login;
@@ -361,7 +399,9 @@ void MaquinaRefri::modoOperador()
 		pSaida->impMensa("\tOperador nao valido");
 	}
 }
-
+//
+//
+//
 void MaquinaRefri::inputPassword()
 {
 #if INTERFACE == 1 || INTERFACE == 3 // Using PC (diretivas de compilação para processdor)
@@ -372,7 +412,8 @@ void MaquinaRefri::inputPassword()
 	//
 	passwordInserido = pEntrada->getOperatorPassword();
 }
-
+//
+//
 // Verifica se o password usado pelo Operador corresponde com o cadastrado
 bool MaquinaRefri::verificaPassword()
 {
@@ -381,10 +422,14 @@ bool MaquinaRefri::verificaPassword()
 	else
 		return false;
 };
-
+//
+//
+//
 void MaquinaRefri::showMenu()
 {
-	cout << "showMenu() executing..." << endl;
+	//MaquinaRefri *ptrMaquina;
+	//void (MaquinaRefri::*pLogicaEstados)() = &MaquinaRefri::logicaEstados;
+	//projectEscVoid.addTaskReadyEstruct(pLogicaEstados, ptrMaquina, 5, 1);
 #if INTERFACE == 1 || INTERFACE == 3 // Using PC (diretivas de compilação para processdor)
 	pSaida = new TelaPc();
 #else // Using Atlys
@@ -392,3 +437,6 @@ void MaquinaRefri::showMenu()
 #endif
 	pSaida->menu();
 }
+//
+//
+//
